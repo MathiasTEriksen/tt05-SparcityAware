@@ -1,38 +1,48 @@
 
 /*
-      -- 1 --
-     |       |
-     6       2
-     |       |
-      -- 7 --
-     |       |
-     5       3
-     |       |
-      -- 4 --
+    U(t+1) = Bu(t)+I
+
+    S(t) -> 1 u(t) > V
+         -> 0, otherwise
+
+    I --> (+) --> u(t+1)
+           ^    ^
+           |   | |<-- CLK
+           |    | <-- u(t)
+           ----(X)<--- B   
+
+    Comparator for spike
+
+    --> wire
+    --> assign (combinational logic)
+
+    -> reg } a <= b
 */
 
-module seg7 (
-    input wire [3:0] counter,
-    output reg [6:0] segments
+module lif_neuron (
+    input wire [7:0]    current,
+    output wire [7:0]   next_state,
+    output wire         spike,
+    input wire          clk,
+    input wire          rst_n   //low to reset
 );
 
-    always @(*) begin
-        case(counter)
-            //                7654321
-            0:  segments = 7'b0111111;
-            1:  segments = 7'b0000110;
-            2:  segments = 7'b1011011;
-            3:  segments = 7'b1001111;
-            4:  segments = 7'b1100110;
-            5:  segments = 7'b1101101;
-            6:  segments = 7'b1111100;
-            7:  segments = 7'b0000111;
-            8:  segments = 7'b1111111;
-            9:  segments = 7'b1100111;
-            default:    
-                segments = 7'b0000000;
-        endcase
-    end
+    reg [7:0] state, threshold;
+    
+    // resting potential and threhold
 
+    assign next_state = current + (state >> 1); // decay rate 0.5
+    assign spike = (state >= threshold);
+
+    always @(posedge clk) begin
+        if (!rst_n) begin
+            next_state <- 0;
+            state <= 0;
+            threhold <= 32;
+        end else begin
+            state <= next_state;
+        end
+    end
+    
 endmodule
 
