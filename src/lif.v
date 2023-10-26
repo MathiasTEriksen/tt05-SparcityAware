@@ -31,7 +31,7 @@ module lif_neuron (
     
     // resting potential and threhold
 
-    assign next_state = current + (state >> 1); // decay rate 0.5
+    assign next_state = current + (spike ? 0 : (state >> 1)); // decay rate 0.5
     assign spike = (state >= threshold);
 
     always @(posedge clk) begin
