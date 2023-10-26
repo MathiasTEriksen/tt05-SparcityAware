@@ -36,9 +36,9 @@ module lif_neuron (
 
     always @(posedge clk) begin
         if (!rst_n) begin
-            next_state <- 0;
+            next_state <= 0;
             state <= 0;
-            threhold <= 32;
+            threshold <= 32;
         end else begin
             state <= next_state;
         end
