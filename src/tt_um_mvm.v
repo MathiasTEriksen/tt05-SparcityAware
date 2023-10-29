@@ -18,7 +18,7 @@ module tt_um_mvm #( parameter MAX_COUNT = 24'd10_000_000 ) (
     assign uio_oe = 8'b11111111;
     assign uio_out [7:1] = 7'd0;
     // put bottom 8 bits of second counter out on the bidirectional gpio
-    assign uio_out = second_counter[7:0];
+    // assign uio_out = second_counter[7:0];
     
     // Instantiate lif neuron with next_state connected
     mvm mvm_1(.current(ui_in), .next_state(next_state), .spike(uio_out[0]), .clk(clk), .rst_n(rst_n));
