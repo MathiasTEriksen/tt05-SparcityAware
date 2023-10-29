@@ -11,7 +11,7 @@ module tt_um_mvm #( parameter MAX_COUNT = 24'd10_000_000 ) (
     input  wire       rst_n     // reset_n - low to reset
 );
 
-    // Declare next_state as a wire
+    // Declare next_state as wires
     wire [7:0] next_state;
 
     // use bidirectionals as outputs
