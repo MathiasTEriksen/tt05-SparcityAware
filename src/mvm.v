@@ -19,7 +19,7 @@
     -> reg } a <= b
 */
 
-module lif_neuron (
+module mvm (
     input wire [7:0]    current,
     output wire [7:0]   next_state,
     output wire         spike,
