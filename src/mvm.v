@@ -2,7 +2,7 @@ module MVM_Accelerator (
     //input [3:0] spike_train,       // 4-input spike train
     input start,                   // Signal to start MVM
     input clk,                     // Clock
-    input rst,                     // Reset
+    input rst_n,                     // Reset
     input [1:0] row_val,            // CSR row pointers for 4x4 matrix
     input [7:0] value,              // CSR values for 4x4 matrix (assuming max 16 non-zero values)
     input [1:0] column_val,         // CSR column indices for 4x4 matrix (assuming max 16 non-zero values)
