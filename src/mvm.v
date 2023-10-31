@@ -42,7 +42,7 @@ always @(posedge clk or posedge rst_n) begin
 
             IDLE: begin
                 if (start) begin
-                    state <= FETCH;
+                    state <= FETCH_CSR;
                   
                 end
             end
@@ -58,7 +58,7 @@ always @(posedge clk or posedge rst_n) begin
                     i <= i+1;                
                 end else if (done_list) begin
                      FETCH_ready <= 0;
-                    state <= COMPUTE;
+                    state <= FETCH_TRAIN;
                     i <= 0;
                 end   
             end     
