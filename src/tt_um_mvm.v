@@ -12,19 +12,28 @@ module tt_um_mvm #( parameter MAX_COUNT = 24'd10_000_000 ) (
 );
 
     // Declare next_state as wire
-    wire [7:0] next_state;
+    //wire [7:0] next_state;
 
     // use bidirectionals as outputs
-    assign uio_oe = 8'b0000 0011;
+    assign uio_oe = 8'b00000011;
     //assign uio_out [7:1] = 7'd0;
     // put bottom 8 bits of second counter out on the bidirectional gpio
     // assign uio_out = second_counter[7:0];
     
     // Instantiate lif neuron with next_state connected
-    MVM_Accelerator block1(.start(ena), .clk(clk), .rst_n(rst_n), .row_val(uio_in[6:7]), .column_val(uio_in[4:5])
-                            .value([ui_in[7:0]]), .sending_CPU(uio_in[3]), .done_list(uio_in[2]), ;
+    MVM_Accelerator block1( .start(ena),
+                            .clk(clk),
+                            .rst_n(rst_n),
+                            .row_val(uio_in[6:7]),
+                            .column_val(uio_in[4:5]),
+                            .value(ui_in[7:0]),
+                            .sending_CPU(uio_in[3]),
+                            .done_list(uio_in[2]),
+                            .output_val(uo_out),
+                            .sending_out(uio_out[1]),
+                            .FETCH_ready(uio_out[0])) ;
     
     // Output next_state to uo_out
-    assign uo_out = next_state;
+    //assign uo_out = next_state;
 
 endmodule
