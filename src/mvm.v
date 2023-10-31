@@ -39,7 +39,7 @@ always @(posedge clk or posedge rst_n) begin
         current_row <= 0;
         i <= 0;
         j <= 0;
-        spike_train = 4'b0000;
+        spike_train <= 4'b0000;
     end else begin
         case (state)
 
