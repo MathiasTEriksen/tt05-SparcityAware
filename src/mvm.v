@@ -13,11 +13,11 @@ module MVM_Accelerator (
     output reg FETCH_ready
 );
 
-reg [1:0] row_pointers[15:0];       // CSR row pointers for 4x4 matrix
-reg [7:0] values[15:0];             // CSR values for 4x4 matrix (assuming max 16 non-zero values)
-reg [1:0] column_indices[15:0];     // CSR column indices for 4x4 matrix (assuming max 16 non-zero values)
-reg [7:0] result[3:0];              // Resultant output after MVM
-reg [3:0] spike_train = 4'b0000;    // 4-input spike train
+reg [1:0] row_pointers[8:0];       // CSR row pointers for 4x4 matrix
+reg [7:0] values[8:0];             // CSR values for 4x4 matrix (assuming max 16 non-zero values)
+reg [1:0] column_indices[8:0];     // CSR column indices for 4x4 matrix (assuming max 16 non-zero values)
+reg [7:0] result[2:0];              // Resultant output after MVM
+reg [2:0] spike_train = 3'b000;    // 4-input spike train
 
 parameter [2:0] IDLE        = 3'b000,   // states
                 TRANSMIT    = 3'b001,   // transmit computed vector
@@ -38,7 +38,7 @@ always @(posedge clk or posedge rst_n) begin
         current_row <= 0;
         i <= 0;
         j <= 0;
-        spike_train <= 4'b0000;
+        spike_train <= 3'b000;
     end else begin
         case (state)
 
@@ -79,7 +79,7 @@ always @(posedge clk or posedge rst_n) begin
                 if (row_pointers[i] == current_row) begin
                     interval <= ((spike_train[column_indices[i]])*(values[i])) + interval;
                     i <= i + 1;
-                end else if (current_row > 3) begin
+                end else if (current_row > 2) begin
                     i <= 0;
                     interval <= 0;
                     current_row <= 0;
@@ -97,7 +97,7 @@ always @(posedge clk or posedge rst_n) begin
                 sending_out <= sending_out^1'b1;
                 j <= j+1;
 
-                if (i>3) begin
+                if (i>2) begin
                     state <= IDLE;  
                     j <= 0; 
                end 
