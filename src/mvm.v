@@ -77,7 +77,7 @@ always @(posedge clk or posedge rst) begin
                     i <= i + 1;
                 end else if (current_row > 3) begin
                     i <= 0;
-                    sending_out <= sending_out^0'b1;
+                    sending_out <= sending_out ^ 1'b1;
                     state <= TRANSMIT;
                 end else begin
                     result[current_row] <= interval;
@@ -88,7 +88,7 @@ always @(posedge clk or posedge rst) begin
 
             TRANSMIT: begin               
               output_val <= result[j];
-                sending_out <= sending_out^0'b1;
+                sending_out <= sending_out^1'b1;
                 j <= j+1;
 
                 if (i>3) begin
