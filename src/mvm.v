@@ -33,7 +33,7 @@ reg [1:0] j=0;
   
 reg [7:0] interval;
 
-always @(posedge clk or posedge rst) begin
+always @(posedge clk or posedge rst_n) begin
     if (rst_n) begin
         state <= IDLE;
         current_row <= 0;
