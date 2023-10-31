@@ -32,8 +32,8 @@ reg [1:0] j = 0;            // counters
   
 reg [7:0] interval;         // intermediate value for calculation
 
-always @(posedge clk or posedge rst_n) begin
-    if (rst_n) begin
+always @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
         state <= IDLE;          // reset register values on reset
         current_row <= 0;
         i <= 0;
