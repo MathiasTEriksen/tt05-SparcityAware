@@ -26,7 +26,7 @@ parameter [2:0] IDLE        = 3'b000,
                 FETCH_CSR   = 3'b011,
                 FETCH_TRAIN = 3'b100;
 
-reg [1:0] state = IDLE;
+reg [2:0] state = IDLE;
 reg [1:0] current_row = 0;  // Current row being processed
 reg [3:0] i = 0;
 reg [1:0] j = 0;  
