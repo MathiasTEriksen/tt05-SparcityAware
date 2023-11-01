@@ -31,7 +31,7 @@ reg [3:0] i = 0;
 reg [1:0] j = 0;            // counters
   
 reg [7:0] interval;         // intermediate value for calculation
-sending_out = 1;
+
 
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
