@@ -69,7 +69,7 @@ always @(posedge clk or negedge rst_n) begin
                     row_pointers[i] <= row_val;         // load values in CSR format (row) (col) (value)
                     column_indices[i] <= column_val;    
                     values[i] <= value;
-                    i <= i+1;                           // iterate index for arrays
+                    i <= i + 1;                           // iterate index for arrays
                 end  
             end     
 

@@ -5,7 +5,7 @@ from cocotb.triggers import RisingEdge, FallingEdge, Timer, ClockCycles
 @cocotb.test()
 async def test_mvm(dut):
 
-    dut._log.info("start")
+    dut._log.info("TEST CASE 1")
 
     clock = Clock(dut.clk, 1, units= 'ns')
     cocotb.start_soon(clock.start())
@@ -13,136 +13,177 @@ async def test_mvm(dut):
     dut.rst_n.value = 0
     await ClockCycles(dut.clk, 10)
     dut.rst_n.value = 1
+    dut.uio_in.value = 0b00101000
+
     dut.ena.value = 1
+
+    await ClockCycles(dut.clk, 1)
+    dut.uio_in.value = 0b00100000
+    await ClockCycles(dut.clk, 10)
+
+    
 
     VALUES = [32,14,15,7]
     ROWS = [0,1,1,2]
     COLS = [2,0,2,1]
-    i = 0
-    j = 0
-    num = 0
 
-    list = [0]*8
-    list[7] = 0
-    list[6] = 0
-    list[5] = 1
-    list[4] = 0
-    list[3] = 1
-    list[2] = 0
-    list[1] = 0
-    list[0]= 0
-
-    for j in range(8):
-        num = (list[j]*(2^j)) + num
-
-    dut.ui_in.value = VALUES[i]
-    dut.uio_in.value = num
-    dut._log.info(list)
+    dut.ui_in.value = VALUES[0]
+    dut.uio_in.value = 0b00101000
+    dut.ena.value = 1
 
     await ClockCycles(dut.clk, 1)
-
-    list[3] = 0
-    for j in range(8):
-        num = (list[j]*(2^j)) + num
-    dut.uio_in.value = num
-
+    dut.uio_in.value = 0b00100000
     await ClockCycles(dut.clk, 10)
-    
+
     i=1
-    j=0
+    
+    dut.ui_in.value = VALUES[1]
+    dut.uio_in.value = 0b01001000
+    
 
-    list[7] = 0
-    list[6] = 1
-    list[5] = 0
-    list[4] = 0
-    list[3] = 1
-    list[2] = 0
-    list[1] = 0
-    list[0]= 0
-    
-    for j in range(8):
-        num = (list[j]*(2^j)) + num
-    
-    dut.ui_in.value = VALUES[i]
-    dut.uio_in.value = num
-    
     await ClockCycles(dut.clk, 1)
-
-    list[3] = 0
-    for j in range(8):
-        num = (list[j]*(2^j)) + num
-    dut.uio_in.value = num
-
+    dut.uio_in.value = 0b00100000
     await ClockCycles(dut.clk, 10)
 
     i=2
-    j=0
-
-    list[7] = 0
-    list[6] = 1
-    list[5] = 1
-    list[4] = 0
-    list[3] = 1
-    list[2] = 0
-    list[1] = 0
-    list[0]= 0
     
-    for j in range(8):
-        num = (list[j]*(2^j)) + num
-
-    dut.ui_in.value = VALUES[i]
-    dut.uio_in.value = num
+    dut.ui_in.value = VALUES[2]
+    dut.uio_in.value = 0b01101000
 
     await ClockCycles(dut.clk, 1)
-
-    list[3] = 0
-    for j in range(8):
-        num = (list[j]*(2^j)) + num
-    dut.uio_in.value = num
-
+    dut.uio_in.value = 0b00100000
     await ClockCycles(dut.clk, 10)
 
     i=3
-    j=0
 
-    list[7] = 1
-    list[6] = 0
-    list[5] = 0
-    list[4] = 1
-    list[3] = 1
-    list[2] = 0
-    list[1] = 0
-    list[0]= 0
     
-    for j in range(8):
-        num = (list[j]*(2^j)) + num
-
-
-    dut.ui_in.value = VALUES[i]
-    dut.uio_in.value = num
+    dut.ui_in.value = VALUES[3]
+    dut.uio_in.value = 0b10011000
 
     await ClockCycles(dut.clk, 1)
-
-    list[3] = 0
-    for j in range(8):
-        num = (list[j]*(2^j)) + num
-    dut.uio_in.value = num
-
+    dut.uio_in.value = 0b00100000
     await ClockCycles(dut.clk, 10)
 
-    j=0
+    dut.ui_in.value = 0b101
+    dut.uio_in.value = 0b00001100
 
-    list[2] = 1
-    for j in range(8):
-        num = (list[j]*(2^j)) + num
-
-    dut.ui_in.value = 5
-    dut.uio_in.value = num
+    dut.ena.value = 0
 
 
     for _ in range(100):    # runs for 100 clk cycles
         await RisingEdge(dut.clk)
+
+
+    
+    dut._log.info("TEST CASE 2")
+
+    dut.rst_n.value = 0
+    await ClockCycles(dut.clk, 10)
+    dut.rst_n.value = 1
+    dut.uio_in.value = 0b00101000
+
+    dut.uio_in.value = 0b00101000
+    dut.ena.value = 1
+
+    await ClockCycles(dut.clk, 1)
+    dut.uio_in.value = 0b00100000
+    await ClockCycles(dut.clk, 10)
+
+    VALUES = [9, 8, 7, 6, 5, 4, 3, 2, 1]
+    ROWS = [0, 0, 0, 1, 1, 1, 2, 2, 2,]
+    COLS = [0, 0, 0, 1, 1, 1, 2, 2, 2,]
+
+    dut.ui_in.value = VALUES[0]
+    dut.uio_in.value = 0b00001000
+    dut.ena.value = 1
+
+    await ClockCycles(dut.clk, 1)
+    dut.uio_in.value = 0b00000000
+    await ClockCycles(dut.clk, 10)
+
+    dut.ui_in.value = VALUES[1]
+    dut.uio_in.value = 0b00001000
+    dut.ena.value = 1
+
+    await ClockCycles(dut.clk, 1)
+    dut.uio_in.value = 0b00000000
+    await ClockCycles(dut.clk, 10)
+
+    dut.ui_in.value = VALUES[2]
+    dut.uio_in.value = 0b00001000
+    dut.ena.value = 1
+
+    await ClockCycles(dut.clk, 1)
+    dut.uio_in.value = 0b00000000
+    await ClockCycles(dut.clk, 10)
+
+    dut.ui_in.value = VALUES[3]
+    dut.uio_in.value = 0b01011000
+    dut.ena.value = 1
+
+    await ClockCycles(dut.clk, 1)
+    dut.uio_in.value = 0b00000000
+    await ClockCycles(dut.clk, 10)
+
+    dut.ui_in.value = VALUES[4]
+    dut.uio_in.value = 0b01011000
+    dut.ena.value = 1
+
+    await ClockCycles(dut.clk, 1)
+    dut.uio_in.value = 0b00000000
+    await ClockCycles(dut.clk, 10)
+
+    dut.ui_in.value = VALUES[5]
+    dut.uio_in.value = 0b01011000
+    dut.ena.value = 1
+
+    await ClockCycles(dut.clk, 1)
+    dut.uio_in.value = 0b00000000
+    await ClockCycles(dut.clk, 10)
+
+    dut.ui_in.value = VALUES[6]
+    dut.uio_in.value = 0b10101000
+    dut.ena.value = 1
+
+    await ClockCycles(dut.clk, 1)
+    dut.uio_in.value = 0b00000000
+    await ClockCycles(dut.clk, 10)
+
+    dut.ui_in.value = VALUES[7]
+    dut.uio_in.value = 0b10101000
+    dut.ena.value = 1
+
+    await ClockCycles(dut.clk, 1)
+    dut.uio_in.value = 0b00000000
+    await ClockCycles(dut.clk, 10)
+
+    dut.ui_in.value = VALUES[8]
+    dut.uio_in.value = 0b10101000
+    dut.ena.value = 1
+
+    await ClockCycles(dut.clk, 1)
+    dut.uio_in.value = 0b00000000
+    await ClockCycles(dut.clk, 10)
+
+    dut.ui_in.value = 0b111
+    dut.uio_in.value = 0b00001100
+
+    await ClockCycles(dut.clk, 5)
+
+    temp = dut.uio_out.value
+
+    # assert  dut.uo_out.value == 6, "Failed first number"
+    
+    dut._log.info(temp)
+
+    dut.ena.value = 0
+
+    for _ in range(100):    # runs for 100 clk cycles
+        await RisingEdge(dut.clk)
+ 
+
     
     dut._log.info("Finished Test!")
+
 
 
