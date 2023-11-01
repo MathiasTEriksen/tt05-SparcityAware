@@ -39,6 +39,13 @@ async def test_mvm(dut):
     dut.uio_in.value = num
     dut._log.info(list)
 
+    await ClockCycles(dut.clk, 1)
+
+    list[3] = 0
+    for j in range(8):
+        num = (list[j]*(2^j)) + num
+    dut.uio_in.value = num
+
     await ClockCycles(dut.clk, 10)
     
     i=1
@@ -59,6 +66,12 @@ async def test_mvm(dut):
     dut.ui_in.value = VALUES[i]
     dut.uio_in.value = num
     
+    await ClockCycles(dut.clk, 1)
+
+    list[3] = 0
+    for j in range(8):
+        num = (list[j]*(2^j)) + num
+    dut.uio_in.value = num
 
     await ClockCycles(dut.clk, 10)
 
@@ -78,6 +91,13 @@ async def test_mvm(dut):
         num = (list[j]*(2^j)) + num
 
     dut.ui_in.value = VALUES[i]
+    dut.uio_in.value = num
+
+    await ClockCycles(dut.clk, 1)
+
+    list[3] = 0
+    for j in range(8):
+        num = (list[j]*(2^j)) + num
     dut.uio_in.value = num
 
     await ClockCycles(dut.clk, 10)
@@ -101,9 +121,25 @@ async def test_mvm(dut):
     dut.ui_in.value = VALUES[i]
     dut.uio_in.value = num
 
+    await ClockCycles(dut.clk, 1)
+
+    list[3] = 0
+    for j in range(8):
+        num = (list[j]*(2^j)) + num
+    dut.uio_in.value = num
+
     await ClockCycles(dut.clk, 10)
 
-    
+    j=0
+
+    list[2] = 1
+    for j in range(8):
+        num = (list[j]*(2^j)) + num
+
+    dut.ui_in.value = 5
+    dut.uio_in.value = num
+
+
     for _ in range(100):    # runs for 100 clk cycles
         await RisingEdge(dut.clk)
     

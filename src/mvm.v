@@ -31,6 +31,7 @@ reg [3:0] i = 0;
 reg [1:0] j = 0;            // counters
   
 reg [7:0] interval;         // intermediate value for calculation
+sending_out = 1;
 
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
@@ -43,6 +44,12 @@ always @(posedge clk or negedge rst_n) begin
         case (state)
 
             IDLE: begin
+                current_row <= 0;
+                i <= 0;
+                j <= 0;
+                spike_train <= 3'b000;
+                sending_out <= 1;
+                interval <= 0;
                 if (start) begin                    // use start(ena) to begin loading data from CPU
                     state <= FETCH_CSR;
                   
@@ -51,18 +58,19 @@ always @(posedge clk or negedge rst_n) begin
 
             FETCH_CSR: begin
                 
-                FETCH_ready <= 1;                       // CPU done loading flag
-                if (sending_CPU) begin                  // if CPU is sending new data
+                FETCH_ready <= 1;   
+                if (done_list) begin         // if done sending CSR matrix (flag from CPU)
+                    FETCH_ready <= 0;                   // not ready for spiketrain yet
+                    state <= FETCH_TRAIN;               // go to get the spike train
+                    i <= 0;                             // reset index counter
+                end                         // CPU done loading flag
+                else if (sending_CPU) begin                  // if CPU is sending new data
                     FETCH_ready <= 0;                   // not ready for new data
                     row_pointers[i] <= row_val;         // load values in CSR format (row) (col) (value)
                     column_indices[i] <= column_val;    
                     values[i] <= value;
                     i <= i+1;                           // iterate index for arrays
-                end else if (done_list) begin           // if done sending CSR matrix (flag from CPU)
-                    FETCH_ready <= 0;                   // not ready for spiketrain yet
-                    state <= FETCH_TRAIN;               // go to get the spike train
-                    i <= 0;                             // reset index counter
-                end   
+                end  
             end     
 
             FETCH_TRAIN: begin
@@ -97,7 +105,7 @@ always @(posedge clk or negedge rst_n) begin
                 sending_out <= sending_out^1'b1;
                 j <= j+1;
 
-                if (i>2) begin
+                if (j>2) begin
                     state <= IDLE;  
                     j <= 0; 
                end 
