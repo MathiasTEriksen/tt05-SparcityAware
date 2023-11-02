@@ -28,8 +28,7 @@ parameter [2:0] IDLE        = 3'b000,   // states
 reg [2:0] state = IDLE;
 reg [1:0] current_row = 0;  // Current row being processed
 reg [3:0] i = 0;    
-reg [1:0] j = 0;            // counters
-  
+reg [1:0] j = 0;            // counters 
 reg [7:0] interval;         // intermediate value for calculation
 
 
@@ -44,13 +43,13 @@ always @(posedge clk or negedge rst_n) begin
         case (state)
 
             IDLE: begin
-                current_row <= 0;
+                current_row <= 0;               // reset registers
                 i <= 0;
                 j <= 0;
                 spike_train <= 3'b000;
                 sending_out <= 1;
                 interval <= 0;
-                if (start) begin                    // use start(ena) to begin loading data from CPU
+                if (start) begin                // use start(ena) to begin loading data from CPU
                     state <= FETCH_CSR;
                   
                 end
@@ -60,11 +59,11 @@ always @(posedge clk or negedge rst_n) begin
                 
                 FETCH_ready <= 1;   
                 if (done_list) begin         // if done sending CSR matrix (flag from CPU)
-                    FETCH_ready <= 0;                   // not ready for spiketrain yet
-                    state <= FETCH_TRAIN;               // go to get the spike train
-                    i <= 0;                             // reset index counter
-                end                         // CPU done loading flag
-                else if (sending_CPU) begin                  // if CPU is sending new data
+                    FETCH_ready <= 0;        // not ready for spiketrain yet
+                    state <= FETCH_TRAIN;    // go to get the spike train
+                    i <= 0;                  // reset index counter
+                end                          // CPU done loading flag
+                else if (sending_CPU) begin              // if CPU is sending new data
                     FETCH_ready <= 0;                   // not ready for new data
                     row_pointers[i] <= row_val;         // load values in CSR format (row) (col) (value)
                     column_indices[i] <= column_val;    
@@ -77,7 +76,7 @@ always @(posedge clk or negedge rst_n) begin
 
                 FETCH_ready <= 1;                       // ready for new data
                 if (sending_CPU) begin
-                    spike_train <= value[3:0];          // load in spike train
+                    spike_train <= value[2:0];          // load in spike train
                     FETCH_ready <= 1;                   // ready to get data again
                     state <= COMPUTE;                   // compute 
                 end            
@@ -86,13 +85,13 @@ always @(posedge clk or negedge rst_n) begin
             COMPUTE: begin                
                 if (row_pointers[i] == current_row) begin
                     interval <= ((spike_train[column_indices[i]])*(values[i])) + interval;
-                    i <= i + 1;
-                end else if (current_row > 2) begin
-                    i <= 0;
-                    interval <= 0;
+                    i <= i + 1;                         // calculate intermediate multiplication and add to total
+                end else if (current_row > 2) begin     // does matrix math row by row
+                    i <= 0;                             // if we are past the allocated amount of of rows
+                    interval <= 0;                      // send out vector
                     current_row <= 0;
-                    sending_out <= sending_out ^ 1'b1;
-                    state <= TRANSMIT;
+                    sending_out <= sending_out ^ 1'b1;  // flip sending out bit
+                    state <= TRANSMIT;                  // move to transmit state
                 end else begin
                     result[current_row] <= interval;
                     interval <= 0;
