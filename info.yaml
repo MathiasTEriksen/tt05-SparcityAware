@@ -21,60 +21,64 @@ yaml_version: 4
 #
 # Here is a great example: https://github.com/davidsiaw/tt02-davidsiaw-stackcalc/blob/38c5647f83aad2aec675d566aa3d67b98f0aac81/info.yaml
 documentation: 
-  author:       "Mathias Eriksen"      # Your name
-  title:        "Sparcity Aware Network"      # Project title
-  language:     "Verilog" # other examples include Verilog, Amaranth, VHDL, etc
-  description:  "..."      # Short description of what your project does
+  author:       "Mathias Eriksen" 
+  title:        "Matrix Vector Multiplication Accelerator" 
+  language:     "Verilog" 
+  description:  "This project takes in a 3x3 weight matrix in Compressed Sparse Row format,
+                 value is quantized and 8 bits long. It also takes in the corresponding
+                 3 bit spike train. It then computes the matrix vector multiplication
+                 product and outputs the resulting vector on the output line"
 
 # Longer description of how the project works. You can use standard markdown format.
   how_it_works: |
-      Uses a set of registers to divide the clock, and then some combinational logic
-      to convert from binary to decimal for the display.
+      Uses a set of registers and flags from the CPU to fetch the weight matrix in CSR format 
+      as well as the spike train. The values are passed in one at a time, and the entire matrix
+      is loaded into registers that are internal to the IC
 
-      Puts the bottom 8 bits of the counter on the bidirectional outputs.
+      Once the full sparse matrix and spike train are loaded in, an algorithm is used to compute
+      the resultant vector of the matrix vector multiplication of the weight matrix and the spike train
 
-      With all the inputs set to 0, the internal 24 bit compare is set to 10,000,000. This means the
-      counter will increment by one each second.
-
-      If any inputs are non zero, then the input will be used as an bits 11 to 18 of the 24 bit compare register.
-      Example: setting the inputs to 00010000 will program 16384 into the compare register.
-      With a 10MHz clock the counter will increment ~610 times per second.
+      Finally, the output vector is transmitted on the output line, along with a flag bit which flips
+      each time a new value is sent out.
 
 # Instructions on how someone could test your project, include things like what buttons do what and how to set the clock if needed
   how_to_test:  |
-      After reset, the counter should increase by one every second with a 10MHz input clock.
-      Experiment by changing the inputs to change the counting speed.
+      After reset, send values in CSR format using the input bits described below. Send a value by toggling
+      the sending CPU flag for one clock cycle while the values are in their respective registers. Repeat
+      for the entire matrix, toggling the sending CPU flag low between each value. Then, check the return
+      values by waiting for the sending out flag from the IC to flip. After the first flip, the other
+      two values will be sent on each clock edge. 
 
 # A description of what the inputs do (e.g. red button, SPI CLK, SPI MOSI, etc).
-  inputs:               
-    - current bit 11
-    - current bit 12
-    - current bit 13
-    - current bit 14
-    - current bit 15
-    - current bit 16
-    - current bit 17
-    - current bit 18
+  inputs:  
+    - Input Value bit 0             
+    - Input Value bit 1
+    - Input Value bit 2
+    - Input Value bit 3
+    - Input Value bit 4
+    - Input Value bit 5
+    - Input Value bit 6
+    - Input Value bit 7
 # A description of what the outputs do (e.g. status LED, SPI MISO, etc)
   outputs:
-    - segment a
-    - segment b
-    - segment c
-    - segment d
-    - segment e
-    - segment f
-    - segment g
-    - dot
+    - Output Value bit 0
+    - Output Value bit 1 
+    - Output Value bit 2
+    - Output Value bit 3
+    - Output Value bit 4
+    - Output Value bit 5
+    - Output Value bit 6
+    - Output Value bit 7
 # A description of what the bidirectional I/O pins do (e.g. I2C SDA, I2C SCL, etc)
   bidirectional:
-    - second counter bit 0
-    - second counter bit 1
-    - second counter bit 2
-    - second counter bit 3
-    - second counter bit 4
-    - second counter bit 5
-    - second counter bit 6
-    - second counter bit 7
+    - FETCH Ready flag (out)
+    - Sending out flag  (out)
+    - Done sending flag (in)
+    - Sending CPU flag (in)
+    - Column Value bit 0
+    - Column Value bit 1
+    - Row Value bit 0
+    - Row Value bit 1
 
 # The following fields are optional
   tag:          "timer, test"      # comma separated list of tags: test, encryption, experiment, clock, animation, utility, industrial, pwm, fpga, alu, microprocessor, risc, riscv, sensor, signal generator, fft, filter, music, bcd, sound, serial, timer, random number generator, calculator, decoder, counter, puzzle, multiplier, game, oscillator,
