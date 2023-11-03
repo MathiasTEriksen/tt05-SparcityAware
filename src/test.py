@@ -68,7 +68,7 @@ async def test_mvm(dut):
     dut.uio_in.value = 0b00001100
 
     dut.ena.value = 0
-
+    await ClockCycles(dut.clk, 1)
 
     while temp == (dut.uio_out.value & 0b10):
         await ClockCycles(dut.clk, 1)
@@ -187,6 +187,7 @@ async def test_mvm(dut):
     await ClockCycles(dut.clk, 5)
 
     dut.ena.value = 0
+    await ClockCycles(dut.clk, 1)
 
     while temp == (dut.uio_out.value & 0b10):
         await ClockCycles(dut.clk, 1)
@@ -247,7 +248,8 @@ async def test_mvm(dut):
     await ClockCycles(dut.clk, 5)
 
     dut.ena.value = 0
-
+    await ClockCycles(dut.clk, 1)
+    
     while temp == (dut.uio_out.value & 0b10):
         await ClockCycles(dut.clk, 1)
     
