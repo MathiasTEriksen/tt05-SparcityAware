@@ -39,6 +39,8 @@ always @(posedge clk or negedge rst_n) begin
         i <= 0;
         j <= 0;
         spike_train <= 3'b000;
+        FETCH_ready <= 0;
+        sending_out <= 1;
     end else begin
         case (state)
 
