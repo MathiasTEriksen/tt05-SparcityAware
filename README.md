@@ -8,31 +8,59 @@ TinyTapeout is an educational project that aims to make it easier and cheaper th
 
 To learn more and get started, visit https://tinytapeout.com.
 
-## Verilog Projects
+## What this Project Does
 
-Edit the [info.yaml](info.yaml) and uncomment the `source_files` and `top_module` properties, and change the value of `language` to "Verilog". Add your Verilog files to the `src` folder, and list them in the `source_files` property.
+This project takes in a 3x3 weight matrix in Compressed Sparse Row format,
+value is quantized and 8 bits long. It also takes in the corresponding
+3 bit spike train. It then computes the matrix vector multiplication
+product and outputs the resulting vector on the output line.
 
-The GitHub action will automatically build the ASIC files using [OpenLane](https://www.zerotoasiccourse.com/terminology/openlane/).
+## How it Works
 
-## How to enable the GitHub actions to build the ASIC files
+Uses a set of registers and flags from the CPU to fetch the weight matrix in CSR format 
+as well as the spike train. The values are passed in one at a time, and the entire matrix
+is loaded into registers that are internal to the IC
 
-Please see the instructions for:
+Once the full sparse matrix and spike train are loaded in, an algorithm is used to compute
+the resultant vector of the matrix vector multiplication of the weight matrix and the spike train
 
-- [Enabling GitHub Actions](https://tinytapeout.com/faq/#when-i-commit-my-change-the-gds-action-isnt-running)
-- [Enabling GitHub Pages](https://tinytapeout.com/faq/#my-github-action-is-failing-on-the-pages-part)
+Finally, the output vector is transmitted on the output line, along with a flag bit which flips
+each time a new value is sent out.
 
-## Resources
+## How to Test
 
-- [FAQ](https://tinytapeout.com/faq/)
-- [Digital design lessons](https://tinytapeout.com/digital_design/)
-- [Learn how semiconductors work](https://tinytapeout.com/siliwiz/)
-- [Join the community](https://discord.gg/rPK2nSjxy8)
+After reset, send values in CSR format using the input bits described below. Send a value by toggling
+he sending CPU flag for one clock cycle while the values are in their respective registers. Repeat
+for the entire matrix, toggling the sending CPU flag low between each value. Then, check the return
+values by waiting for the sending out flag from the IC to flip. After the first flip, the other
+two values will be sent on each clock edge. 
 
-## What next?
+## Pinout
 
-- Submit your design to the next shuttle [on the website](https://tinytapeout.com/#submit-your-design). The closing date is **November 4th**.
-- Edit this [README](README.md) and explain your design, how it works, and how to test it.
-- Share your GDS on your social network of choice, tagging it #tinytapeout and linking Matt's profile:
-  - LinkedIn [#tinytapeout](https://www.linkedin.com/search/results/content/?keywords=%23tinytapeout) [matt-venn](https://www.linkedin.com/in/matt-venn/)
-  - Mastodon [#tinytapeout](https://chaos.social/tags/tinytapeout) [@matthewvenn](https://chaos.social/@matthewvenn)
-  - Twitter [#tinytapeout](https://twitter.com/hashtag/tinytapeout?src=hashtag_click) [@matthewvenn](https://twitter.com/matthewvenn)
+# Input (ui_in bits 0-7):  
+    - Input Value bit 0             
+    - Input Value bit 1
+    - Input Value bit 2
+    - Input Value bit 3
+    - Input Value bit 4
+    - Input Value bit 5
+    - Input Value bit 6
+    - Input Value bit 7
+# Output (uo_out bits 0-7)
+    - Output Value bit 0
+    - Output Value bit 1 
+    - Output Value bit 2
+    - Output Value bit 3
+    - Output Value bit 4
+    - Output Value bit 5
+    - Output Value bit 6
+    - Output Value bit 7
+# bidirectional (uio_out 0-7):
+    - FETCH Ready flag (out)
+    - Sending out flag  (out)
+    - Done sending flag (in)
+    - Sending CPU flag (in)
+    - Column Value bit 0
+    - Column Value bit 1
+    - Row Value bit 0
+    - Row Value bit 1
