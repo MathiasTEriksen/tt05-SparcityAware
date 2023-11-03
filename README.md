@@ -1,7 +1,9 @@
 ![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg)
 
 
-### MVM Accelerator for CSR Format ###
+MVM Accelerator for CSR Format
+==============================
+**Author:***Mathias Eriksen*
 
 ## What this Project Does
 
