@@ -76,7 +76,7 @@ async def test_mvm(dut):
     await ClockCycles(dut.clk, 1)
     
     for j in range(3):
-        #dut._log.info(dut.uo_out.value)
+        dut._log.info(dut.uo_out.value)
         await ClockCycles(dut.clk, 1)
         
     for _ in range(100):    # runs for 100 clk cycles
@@ -194,7 +194,7 @@ async def test_mvm(dut):
     await ClockCycles(dut.clk, 1)
     
     for j in range(3):
-        #dut._log.info(dut.uo_out.value)
+        dut._log.info(dut.uo_out.value)
         await ClockCycles(dut.clk, 1)
    
     for _ in range(100):    # runs for 100 clk cycles
@@ -254,7 +254,7 @@ async def test_mvm(dut):
     await ClockCycles(dut.clk, 1)
     
     for j in range(3):
-        #dut._log.info(dut.uo_out.value)
+        dut._log.info(dut.uo_out.value)
         await ClockCycles(dut.clk, 1)
    
     for _ in range(100):    # runs for 100 clk cycles

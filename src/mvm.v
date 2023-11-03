@@ -49,6 +49,7 @@ always @(posedge clk or negedge rst_n) begin
                 spike_train <= 3'b000;
                 sending_out <= 1;
                 interval <= 0;
+                FETCH_ready <= 0;
                 if (start) begin                // use start(ena) to begin loading data from CPU
                     state <= FETCH_CSR;
                   
