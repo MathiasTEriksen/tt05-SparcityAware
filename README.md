@@ -3,7 +3,7 @@
 
 MVM Accelerator for CSR Format
 ==============================
-**Author:***Mathias Eriksen*
+**Author:** *Mathias Eriksen*
 
 ## What this Project Does
 
