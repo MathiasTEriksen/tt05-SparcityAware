@@ -8,18 +8,18 @@ MVM Accelerator for CSR Format
 ## What this Project Does
 
 This project takes in a 3x3 weight matrix in Compressed Sparse Row format,
-value is quantized and 8 bits long. It also takes in the corresponding
-3 bit spike train. It then computes the matrix vector multiplication
+with the weight values being quantized and 8 bits long. It also takes in the corresponding
+temporal 3 bit spike train. It then computes the matrix vector multiplication
 product and outputs the resulting vector on the output line.
 
 ## How it Works
 
 Uses a set of registers and flags from the CPU to fetch the weight matrix in CSR format 
 as well as the spike train. The values are passed in one at a time, and the entire matrix
-is loaded into registers that are internal to the IC
+is loaded into registers that are internal to the IC.
 
 Once the full sparse matrix and spike train are loaded in, an algorithm is used to compute
-the resultant vector of the matrix vector multiplication of the weight matrix and the spike train
+the resultant vector of the matrix vector multiplication of the weight matrix and the spike train.
 
 Finally, the output vector is transmitted on the output line, along with a flag bit which flips
 each time a new value is sent out.
