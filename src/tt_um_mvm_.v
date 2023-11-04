@@ -1,6 +1,6 @@
 `default_nettype none
 
-module tt_um_mvm #( parameter MAX_COUNT = 24'd10_000_000 ) (
+module tt_um_mvm_ #( parameter MAX_COUNT = 24'd10_000_000 ) (
     input  wire [7:0] ui_in,    // Dedicated inputs - matrix values
     output wire [7:0] uo_out,   // Dedicated outputs - output vector values
     input  wire [7:0] uio_in,   // IOs: Bidirectional Input path -> input, b3 sending_CPU, b4 done_list, b45 col, b67 row 
