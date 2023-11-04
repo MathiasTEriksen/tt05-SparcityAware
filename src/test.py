@@ -21,7 +21,7 @@ async def test_mvm(dut):
     dut.uio_in.value = 0b00100000
     await ClockCycles(dut.clk, 10)
 
-    temp = dut.uio_out[1].value
+    #temp = dut.uio_out[1].value
 
     VALUES = [32,14,15,7]
     ROWS = [0,1,1,2]
@@ -66,18 +66,19 @@ async def test_mvm(dut):
 
     dut.ui_in.value = 0b101
     dut.uio_in.value = 0b00001100
-
+    temp = dut.uio_out[1].value
+    
     dut.ena.value = 0
     await ClockCycles(dut.clk, 5)
 
-    # while temp == (dut.uio_out[1].value):
-    #     await ClockCycles(dut.clk, 1)
+    while temp == (dut.uio_out[1].value):
+        await ClockCycles(dut.clk, 1)
     
-    # await ClockCycles(dut.clk, 1)
+    await ClockCycles(dut.clk, 1)
     
-    # for j in range(3):
-    #     dut._log.info(dut.uo_out.value)
-    #     await ClockCycles(dut.clk, 1)
+    for j in range(3):
+        dut._log.info(dut.uo_out.value)
+        await ClockCycles(dut.clk, 1)
         
     for _ in range(100):    # runs for 100 clk cycles
         await RisingEdge(dut.clk)
