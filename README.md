@@ -62,6 +62,10 @@ two values will be sent on each clock edge.
     - Row Value bit 0
     - Row Value bit 1
 
+# 2D and 3D IC view
+
+![2D](Images/ICView.png)
+
 # What is Tiny Tapeout?
 
 TinyTapeout is an educational project that aims to make it easier and cheaper than ever to get your digital designs manufactured on a real chip.
