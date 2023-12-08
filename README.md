@@ -9,7 +9,7 @@ MVM Accelerator for CSR Format
 
 TinyTapeout is an educational project that aims to make it easier and cheaper than ever to get your digital designs manufactured on a real chip.
 
-My project is described below, including a 2D view of the die layout created by the Openlan .v to GDSII process. 
+My project is described below, including a 2D view of the die layout created by the Openlane .v to GDSII process. This chip will be actually manufactured on the 130 nm process. 
 
 To learn more and get started, visit https://tinytapeout.com.
 
